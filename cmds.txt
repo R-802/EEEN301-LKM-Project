@@ -1,0 +1,16 @@
+sudo config-pin P9.27 pruout
+sudo config-pin P9.24 pruin
+
+sudo make
+sudo make pru
+
+sudo cp ultrasonic_pru.out /lib/firmware/am335x-pru0-fw
+echo 'stop' | sudo tee /sys/class/remoteproc/remoteproc1/state
+echo 'start' | sudo tee /sys/class/remoteproc/remoteproc1/state
+cat /sys/class/remoteproc/remoteproc1/state
+
+sudo insmod ultrasonic_lkm.ko
+sudo ./ultrasonic_app
+
+sudo rmmod ultrasonic_lkm
+echo 'stop' | sudo tee /sys/class/remoteproc/remoteproc1/state
