@@ -12,7 +12,7 @@
 #define PRU_MAP_SIZE 0x3000
 #define SENSOR_COUNT 1
 #define HISTORY_SIZE 8
-#define DEFAULT_SPEED 2915 /* us/m at room temperature */
+#define DEFAULT_SPEED 2915 // us/m at room temperature
 #define POLL_MS 100
 
 // Must match data_t in pru.c

@@ -5,7 +5,7 @@
 
 #include <stdint.h>
 
-/* PRU GPIO registers — R30 = outputs, R31 = inputs */
+// PRU GPIO registers - R30 = outputs, R31 = inputs
 volatile register uint32_t __R30;
 volatile register uint32_t __R31;
 
