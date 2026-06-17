@@ -8,19 +8,12 @@
 #include <linux/timer.h>
 #include <linux/uaccess.h>
 
-#define DEV_NAME "ultrasonic"
-#define CLASS_NAME "ultra"
 #define PRU_PHYS 0x4A310000 // Linux physical address of PRU shared RAM
 #define PRU_MAP_SIZE 0x3000
 #define SENSOR_COUNT 1
 #define HISTORY_SIZE 8
 #define DEFAULT_SPEED 2915 /* us/m at room temperature */
 #define POLL_MS 100
-
-MODULE_LICENSE("GPL");
-MODULE_AUTHOR("EEEN301");
-MODULE_DESCRIPTION("HC-SR04 distance sensor via PRU");
-MODULE_VERSION("0.7");
 
 // Must match data_t in pru.c
 typedef struct {
@@ -108,18 +101,18 @@ static int __init lkm_init(void) {
   int err;
 
   // Create /dev/ultrasonic
-  major = register_chrdev(0, DEV_NAME, &fops);
+  major = register_chrdev(0, "ultrasonic", &fops);
   if (major < 0)
     return major;
 
-  cls = class_create(THIS_MODULE, CLASS_NAME);
+  cls = class_create(THIS_MODULE, "ultra");
   if (IS_ERR(cls)) {
     err = PTR_ERR(cls);
     cls = NULL;
     goto out_chrdev;
   }
 
-  dev = device_create(cls, NULL, MKDEV(major, 0), NULL, DEV_NAME);
+  dev = device_create(cls, NULL, MKDEV(major, 0), NULL, "ultrasonic");
   if (IS_ERR(dev)) {
     err = PTR_ERR(dev);
     dev = NULL;
@@ -144,7 +137,7 @@ out_device:
 out_class:
   class_destroy(cls);
 out_chrdev:
-  unregister_chrdev(major, DEV_NAME);
+  unregister_chrdev(major, "ultrasonic");
   return err;
 }
 
@@ -153,7 +146,7 @@ static void __exit lkm_exit(void) {
   iounmap(pru_mem);
   device_destroy(cls, MKDEV(major, 0));
   class_destroy(cls);
-  unregister_chrdev(major, DEV_NAME);
+  unregister_chrdev(major, "ultrasonic");
 }
 
 module_init(lkm_init);
