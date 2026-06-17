@@ -40,7 +40,7 @@ static uint32_t tof_to_cm(uint32_t tof_us) {
   if (!tof_us)
     return 0;
 
-  return (tof_us * 100) / (2 * speed_us_per_m);
+  return (tof_us * 50) / speed_us_per_m;
 }
 
 // Timer callback: check PRU shared RAM for new samples
